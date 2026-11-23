@@ -1,0 +1,324 @@
+{
+  "purpose": "Reviewed public API contract for flowcoord.",
+  "exports": [
+    "AsyncCircuitBreaker",
+    "AsyncCooldownRegistry",
+    "AsyncKeyedConcurrencyLimiter",
+    "AsyncKeyedRateLimiter",
+    "AsyncLatestTaskCoordinator",
+    "AsyncLoopPortal",
+    "AsyncLoopPortalClosedError",
+    "AsyncResourceScope",
+    "AsyncRetryPolicy",
+    "AsyncScheduledHandle",
+    "AsyncScheduler",
+    "AsyncSingleFlight",
+    "AsyncTaskHandle",
+    "AsyncTaskScope",
+    "BoundedWorkPool",
+    "CircuitBreaker",
+    "CircuitBreakerStats",
+    "CircuitOpenError",
+    "CoalescerStats",
+    "CooldownRegistry",
+    "CooldownStats",
+    "Deadline",
+    "KeyedCoalescer",
+    "KeyedConcurrencyKeyStats",
+    "KeyedConcurrencyLimiter",
+    "KeyedConcurrencyStats",
+    "KeyedRateLimiter",
+    "KeyedRateStats",
+    "LatestTaskCoordinator",
+    "LatestTaskSnapshot",
+    "OperationMetrics",
+    "OperationStats",
+    "OperationStatsSnapshot",
+    "ResourceScope",
+    "RetryObservation",
+    "RetryPolicy",
+    "ScheduledHandle",
+    "Scheduler",
+    "SchedulerStats",
+    "SingleFlight",
+    "SingleFlightStats",
+    "TaskHandle",
+    "TaskScope",
+    "TaskScopeSnapshot",
+    "WorkPoolStats"
+  ],
+  "signatures": {
+    "AsyncCircuitBreaker": {
+      "$call": "(failure_threshold: 'int' = 5, recovery_timeout: 'float' = 30.0, *, half_open_max: 'int' = 1, should_count: 'Callable[[Exception], bool] | None' = None, observer: 'Callable[[CircuitBreakerStats], object] | None' = None, clock: 'Callable[[], float]' = <built-in function monotonic>) -> 'None'",
+      "methods": {
+        "call": "(self, operation: 'Callable[[], Awaitable[T]]') -> 'T'",
+        "reset": "(self) -> 'None'",
+        "stats": "(self) -> 'CircuitBreakerStats'"
+      }
+    },
+    "AsyncCooldownRegistry": {
+      "$call": "(*, max_entries: 'int' = 4096, clock: 'Callable[[], float]' = <built-in function monotonic>) -> 'None'",
+      "methods": {
+        "block": "(self, key: 'K', duration: 'float', *, extend: 'bool' = True) -> 'float'",
+        "remaining": "(self, key: 'K') -> 'float'",
+        "clear": "(self, key: 'K') -> 'bool'",
+        "wait": "(self, key: 'K', timeout: 'float | None' = None) -> 'bool'",
+        "prune": "(self) -> 'int'",
+        "stats": "(self) -> 'CooldownStats'"
+      }
+    },
+    "AsyncKeyedConcurrencyLimiter": {
+      "$call": "(max_concurrency: 'int', *, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "acquire": "(self, key: 'K') -> '_Permit'",
+        "acquire_nowait": "(self, key: 'K') -> 'bool'",
+        "release": "(self, key: 'K') -> 'None'",
+        "stats": "(self) -> 'KeyedConcurrencyStats'",
+        "key_stats": "(self, key: 'K') -> 'KeyedConcurrencyKeyStats'",
+        "aclose": "(self) -> 'None'"
+      }
+    },
+    "AsyncKeyedRateLimiter": {
+      "$call": "(rate: 'float', period: 'float' = 1.0, burst: 'float | None' = None, *, max_keys: 'int' = 4096, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "acquire": "(self, key: 'K') -> 'None'",
+        "try_acquire": "(self, key: 'K') -> 'bool'",
+        "available": "(self, key: 'K') -> 'float'",
+        "prune": "(self) -> 'int'",
+        "stats": "(self) -> 'KeyedRateStats'",
+        "aclose": "(self) -> 'None'"
+      }
+    },
+    "AsyncLatestTaskCoordinator": {
+      "$call": "() -> 'None'",
+      "methods": {
+        "submit": "(self, key: 'K', factory: 'Callable[[], Awaitable[T]]', on_result: 'Callable[[T], object]', *, cancel_previous: 'bool' = True, on_error: 'Callable[[BaseException], object] | None' = None, name: 'str | None' = None) -> 'asyncio.Task[None]'",
+        "cancel": "(self, key: 'K') -> 'bool'",
+        "aclose": "(self, timeout: 'float | None' = None) -> 'None'",
+        "snapshot": "(self) -> 'LatestTaskSnapshot'"
+      }
+    },
+    "AsyncLoopPortal": {
+      "$call": "(*, name: 'str' = 'FlowCoordLoopPortal', max_pending: 'int' = 128) -> 'None'",
+      "methods": {
+        "__init__": "(self, *, name: 'str' = 'FlowCoordLoopPortal', max_pending: 'int' = 128) -> 'None'",
+        "start": "(self) -> 'AsyncLoopPortal'",
+        "submit": "(self, operation: 'Callable[..., Awaitable[T]] | Awaitable[T]', *args: 'object', **kwargs: 'object') -> 'concurrent.futures.Future[T]'",
+        "call": "(self, operation: 'Callable[..., Awaitable[T]] | Awaitable[T]', *args: 'object', timeout: 'float | None' = None, **kwargs: 'object') -> 'T'",
+        "cancel": "(self, future: 'concurrent.futures.Future[Any]') -> 'bool'",
+        "close": "(self, timeout: 'float | None' = None) -> 'None'"
+      }
+    },
+    "AsyncResourceScope": {
+      "$call": "() -> 'None'",
+      "methods": {
+        "__init__": "(self) -> 'None'",
+        "add": "(self, resource: 'object', *, close: 'str | Callable[[object], object]' = 'aclose', owned: 'bool' = True) -> 'object'",
+        "defer": "(self, cleanup: 'Callable[[], object]') -> 'Callable[[], object]'",
+        "detach": "(self, resource: 'object') -> 'object'",
+        "aclose": "(self) -> 'None'",
+        "pending_cleanup": "(self) -> 'int'"
+      }
+    },
+    "AsyncRetryPolicy": {
+      "$call": "(max_attempts: 'int' = 3, *, backoff: \"Literal['fixed', 'exponential']\" = 'exponential', initial_delay: 'float' = 0.0, max_delay: 'float' = 60.0, jitter: 'float' = 0.0, observer: 'Callable[[RetryObservation], None] | None' = None) -> 'None'",
+      "methods": {
+        "run": "(self, operation: 'Callable[[], Awaitable[T]]', *, should_retry: 'Callable[[Exception], bool] | None' = None, deadline: 'Deadline | None' = None) -> 'T'"
+      }
+    },
+    "AsyncScheduledHandle": {
+      "$call": "(task: 'asyncio.Task[Any]', loop: 'asyncio.AbstractEventLoop') -> 'None'",
+      "methods": {
+        "cancel": "(self) -> 'bool'",
+        "join": "(self, timeout: 'float | None' = None) -> 'Any'"
+      }
+    },
+    "AsyncScheduler": {
+      "$call": "(*, max_jobs: 'int' = 4096, on_error: 'Callable[[BaseException], object] | None' = None, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "__init__": "(self, *, max_jobs: 'int' = 4096, on_error: 'Callable[[BaseException], object] | None' = None, observer: 'OperationStats | None' = None) -> 'None'",
+        "schedule_once": "(self, callback: 'Callable[..., object]', *args: 'object', delay: 'float' = 0.0, name: 'str | None' = None, **kwargs: 'object') -> 'AsyncScheduledHandle'",
+        "periodic": "(self, callback: 'Callable[..., object]', *args: 'object', interval: 'float', overlap: \"Literal['skip', 'queue', 'parallel']\" = 'skip', initial_delay: 'float | None' = None, max_parallel: 'int' = 16, name: 'str | None' = None, **kwargs: 'object') -> 'AsyncScheduledHandle'",
+        "cancel": "(self, handle: 'AsyncScheduledHandle') -> 'bool'",
+        "aclose": "(self, timeout: 'float | None' = None) -> 'None'",
+        "snapshot": "(self) -> 'SchedulerStats'"
+      }
+    },
+    "AsyncSingleFlight": {
+      "$call": "() -> 'None'",
+      "methods": {
+        "run": "(self, key: 'K', factory: 'Callable[[], Awaitable[T]]') -> 'T'",
+        "aclose": "(self) -> 'None'",
+        "stats": "(self) -> 'SingleFlightStats'"
+      }
+    },
+    "AsyncTaskHandle": {
+      "$call": "(task: 'asyncio.Task[T]', name: 'str', loop: 'asyncio.AbstractEventLoop') -> 'None'",
+      "methods": {
+        "cancel": "(self) -> 'bool'",
+        "join": "(self, timeout: 'float | None' = None) -> 'T'"
+      }
+    },
+    "AsyncTaskScope": {
+      "$call": "(*, max_pending: 'int' = 128, on_error: 'Callable[[AsyncTaskHandle[Any], BaseException], object] | None' = None, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "__init__": "(self, *, max_pending: 'int' = 128, on_error: 'Callable[[AsyncTaskHandle[Any], BaseException], object] | None' = None, observer: 'OperationStats | None' = None) -> 'None'",
+        "start": "(self, operation: 'TaskOperation[T]', *, name: 'str | None' = None, shutdown: \"Literal['cancel', 'drain']\" = 'cancel') -> 'AsyncTaskHandle[T]'",
+        "cancel": "(self, handle: 'AsyncTaskHandle[Any] | None' = None) -> 'int'",
+        "join": "(self, timeout: 'float | None' = None) -> 'None'",
+        "aclose": "(self, timeout: 'float | None' = None) -> 'None'",
+        "snapshot": "(self) -> 'TaskScopeSnapshot'"
+      }
+    },
+    "BoundedWorkPool": {
+      "$call": "(*, max_workers: 'int', max_pending: 'int', observer: 'OperationStats | None' = None, thread_name_prefix: 'str' = 'FlowCoordWorker') -> 'None'",
+      "methods": {
+        "__init__": "(self, *, max_workers: 'int', max_pending: 'int', observer: 'OperationStats | None' = None, thread_name_prefix: 'str' = 'FlowCoordWorker') -> 'None'",
+        "submit": "(self, operation: 'Callable[..., T]', /, *args: 'Any', **kwargs: 'Any') -> 'Future[T]'",
+        "close": "(self, *, wait: 'bool' = True, cancel_futures: 'bool' = False) -> 'None'",
+        "shutdown": "(self, *, wait: 'bool' = True, cancel_futures: 'bool' = False) -> 'None'",
+        "stats": "(self) -> 'WorkPoolStats'"
+      }
+    },
+    "CircuitBreaker": {
+      "$call": "(failure_threshold: 'int' = 5, recovery_timeout: 'float' = 30.0, *, half_open_max: 'int' = 1, should_count: 'Callable[[Exception], bool] | None' = None, observer: 'Callable[[CircuitBreakerStats], object] | None' = None, clock: 'Callable[[], float]' = <built-in function monotonic>) -> 'None'",
+      "methods": {
+        "call": "(self, operation: 'Callable[[], T]') -> 'T'",
+        "reset": "(self) -> 'None'",
+        "stats": "(self) -> 'CircuitBreakerStats'"
+      }
+    },
+    "CooldownRegistry": {
+      "$call": "(*, max_entries: 'int' = 4096, clock: 'Callable[[], float]' = <built-in function monotonic>) -> 'None'",
+      "methods": {
+        "block": "(self, key: 'K', duration: 'float', *, extend: 'bool' = True) -> 'float'",
+        "remaining": "(self, key: 'K') -> 'float'",
+        "clear": "(self, key: 'K') -> 'bool'",
+        "wait": "(self, key: 'K', timeout: 'float | None' = None) -> 'bool'",
+        "prune": "(self) -> 'int'",
+        "stats": "(self) -> 'CooldownStats'"
+      }
+    },
+    "Deadline": {
+      "$call": "(_expires_at: 'float | None', _clock: 'Callable[[], float]' = <built-in function monotonic>) -> None",
+      "methods": {
+        "after": "(timeout: 'float | None', *, clock: 'Callable[[], float]' = <built-in function monotonic>) -> 'Deadline'",
+        "at": "(timestamp: 'float | None', *, clock: 'Callable[[], float]' = <built-in function monotonic>) -> 'Deadline'",
+        "child": "(self, timeout: 'float | None') -> 'Deadline'"
+      }
+    },
+    "KeyedCoalescer": {
+      "$call": "(*, interval: 'float', key: 'Callable[[T], K]', merge: 'Callable[[T, T], T]', callback: 'Callable[[T], object]', max_pending_keys: 'int' = 128, on_error: 'Callable[[BaseException], object] | None' = None, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "__init__": "(self, *, interval: 'float', key: 'Callable[[T], K]', merge: 'Callable[[T, T], T]', callback: 'Callable[[T], object]', max_pending_keys: 'int' = 128, on_error: 'Callable[[BaseException], object] | None' = None, observer: 'OperationStats | None' = None) -> 'None'",
+        "push": "(self, value: 'T') -> 'None'",
+        "flush": "(self, timeout: 'float | None' = None) -> 'None'",
+        "close": "(self, *, flush: 'bool' = True, timeout: 'float | None' = None) -> 'None'",
+        "stats": "(self) -> 'CoalescerStats'"
+      }
+    },
+    "KeyedConcurrencyKeyStats": {
+      "$call": "(active: 'int', waiters: 'int') -> None",
+      "methods": {}
+    },
+    "KeyedConcurrencyLimiter": {
+      "$call": "(max_concurrency: 'int', *, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "acquire": "(self, key: 'K', timeout: 'float | None' = None) -> 'Iterator[None]'",
+        "acquire_nowait": "(self, key: 'K') -> 'bool'",
+        "release": "(self, key: 'K') -> 'None'",
+        "stats": "(self) -> 'KeyedConcurrencyStats'",
+        "key_stats": "(self, key: 'K') -> 'KeyedConcurrencyKeyStats'",
+        "close": "(self) -> 'None'"
+      }
+    },
+    "KeyedRateLimiter": {
+      "$call": "(rate: 'float', period: 'float' = 1.0, burst: 'float | None' = None, *, max_keys: 'int' = 4096, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "acquire": "(self, key: 'K', timeout: 'float | None' = None) -> 'None'",
+        "try_acquire": "(self, key: 'K') -> 'bool'",
+        "available": "(self, key: 'K') -> 'float'",
+        "prune": "(self) -> 'int'",
+        "stats": "(self) -> 'KeyedRateStats'",
+        "close": "(self) -> 'None'"
+      }
+    },
+    "LatestTaskCoordinator": {
+      "$call": "(*, max_workers: 'int' = 4, max_pending: 'int' = 128) -> 'None'",
+      "methods": {
+        "submit": "(self, key: 'K', factory: 'Callable[[], T]', on_result: 'Callable[[T], object]', *, cancel_previous: 'bool' = True, on_error: 'Callable[[BaseException], object] | None' = None, name: 'str | None' = None) -> 'TaskHandle[None]'",
+        "cancel": "(self, key: 'K') -> 'bool'",
+        "close": "(self, timeout: 'float | None' = None) -> 'None'",
+        "snapshot": "(self) -> 'LatestTaskSnapshot'"
+      }
+    },
+    "OperationStats": {
+      "$call": "(*, max_operations: 'int' = 128) -> 'None'",
+      "methods": {
+        "__init__": "(self, *, max_operations: 'int' = 128) -> 'None'",
+        "record": "(self, name: 'str', *, status: 'str' = 'success', elapsed: 'float' = 0.0, queue_depth: 'int | None' = None, dropped: 'int' = 0, retries: 'int' = 0, rejected: 'int' = 0, timeouts: 'int' = 0, shutdown_seconds: 'float' = 0.0) -> 'None'",
+        "reset": "(self) -> 'None'",
+        "snapshot": "(self) -> 'OperationStatsSnapshot'"
+      }
+    },
+    "ResourceScope": {
+      "$call": "() -> 'None'",
+      "methods": {
+        "__init__": "(self) -> 'None'",
+        "add": "(self, resource: 'object', *, close: 'str | Callable[[object], object]' = 'close', owned: 'bool' = True) -> 'object'",
+        "defer": "(self, cleanup: 'Callable[[], object]') -> 'Callable[[], object]'",
+        "detach": "(self, resource: 'object') -> 'object'",
+        "close": "(self) -> 'None'",
+        "pending_cleanup": "(self) -> 'int'"
+      }
+    },
+    "RetryPolicy": {
+      "$call": "(max_attempts: 'int' = 3, *, backoff: \"Literal['fixed', 'exponential']\" = 'exponential', initial_delay: 'float' = 0.0, max_delay: 'float' = 60.0, jitter: 'float' = 0.0, observer: 'Callable[[RetryObservation], None] | None' = None) -> 'None'",
+      "methods": {
+        "run": "(self, operation: 'Callable[[], T]', *, should_retry: 'Callable[[Exception], bool] | None' = None, deadline: 'Deadline | None' = None) -> 'T'"
+      }
+    },
+    "ScheduledHandle": {
+      "$call": "(owner: 'Scheduler', job: '_ScheduledJob') -> 'None'",
+      "methods": {
+        "cancel": "(self) -> 'bool'",
+        "join": "(self, timeout: 'float | None' = None) -> 'object'"
+      }
+    },
+    "Scheduler": {
+      "$call": "(*, max_workers: 'int' = 4, max_jobs: 'int' = 4096, on_error: 'Callable[[BaseException], object] | None' = None, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "schedule_once": "(self, callback: 'Callable[..., object]', *args: 'object', delay: 'float' = 0.0, name: 'str | None' = None, **kwargs: 'object') -> 'ScheduledHandle'",
+        "periodic": "(self, callback: 'Callable[..., object]', *args: 'object', interval: 'float', overlap: \"Literal['skip', 'queue', 'parallel']\" = 'skip', initial_delay: 'float | None' = None, max_parallel: 'int' = 16, name: 'str | None' = None, **kwargs: 'object') -> 'ScheduledHandle'",
+        "cancel": "(self, handle: 'ScheduledHandle') -> 'bool'",
+        "close": "(self, timeout: 'float | None' = None) -> 'None'",
+        "snapshot": "(self) -> 'SchedulerStats'"
+      }
+    },
+    "SingleFlight": {
+      "$call": "() -> 'None'",
+      "methods": {
+        "run": "(self, key: 'K', factory: 'Callable[[], T]') -> 'T'",
+        "close": "(self, timeout: 'float | None' = None) -> 'None'",
+        "stats": "(self) -> 'SingleFlightStats'"
+      }
+    },
+    "TaskHandle": {
+      "$call": "(future: 'Future[T]', name: 'str', worker: 'threading.local') -> 'None'",
+      "methods": {
+        "cancel": "(self) -> 'bool'",
+        "join": "(self, timeout: 'float | None' = None) -> 'T'"
+      }
+    },
+    "TaskScope": {
+      "$call": "(*, max_workers: 'int' = 4, max_pending: 'int' = 128, on_error: 'Callable[[TaskHandle[Any], BaseException], object] | None' = None, observer: 'OperationStats | None' = None) -> 'None'",
+      "methods": {
+        "start": "(self, operation: 'Callable[[], T]', *, name: 'str | None' = None, shutdown: 'Shutdown' = 'cancel') -> 'TaskHandle[T]'",
+        "cancel": "(self, handle: 'TaskHandle[Any] | None' = None) -> 'int'",
+        "join": "(self, timeout: 'float | None' = None) -> 'None'",
+        "close": "(self, timeout: 'float | None' = None) -> 'None'",
+        "snapshot": "(self) -> 'TaskScopeSnapshot'"
+      }
+    }
+  }
+}
