@@ -8,7 +8,7 @@ Bu rehber başıboş arka plan görevlerini önleyen `TaskScope` ve `LatestTaskC
 
 ## Konu Dizini
 
-- [Problem: Fire-and-Forget Task'lar ve Yetim İşler](#problem-fire-and-forget-tasklar-ve-yetim-işler)
+- [Problem: Fire-and-Forget Task'lar ve Yetim İşler](#problem-fire-and-forget-tasklar-ve-yetim-i%CC%87şler)
 - [`TaskScope` ve `AsyncTaskScope`](#taskscope-ve-asynctaskscope)
 - [`LatestTaskCoordinator` ve `AsyncLatestTaskCoordinator`](#latesttaskcoordinator-ve-asynclatesttaskcoordinator)
 - [`ResourceScope` ve `AsyncResourceScope`](#resourcescope-ve-asyncresourcescope)

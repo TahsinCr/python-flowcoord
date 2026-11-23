@@ -30,7 +30,7 @@ Periyodik bir iş her `1.0` saniyede çalışmak üzere kurulmuşken bir çalı�
 | Politika | Davranış | Ne Zaman Seçilir? |
 | --- | --- | --- |
 | `"skip"` *(varsayılan)* | Önceki çalışma hala sürüyorsa yeni tetiği atlar. | Health-check, periyodik senkronizasyon (birikme istenmez). |
-| `"queue"` | Yeni çalıştırmayı mevcut iş bitene kadar sıraya bekletir. | Her döngünün ardışık olarak mutlaka çalışması gerektiğinde. |
+| `"queue"` | Mevcut iş bittikten sonra bir sonraki çalıştırmayı zamanlar. Kaçırılan her tetikleme için ayrı iş biriktirmez. | Çakışmadan sırayla çalışması gereken işler. |
 | `"parallel"` | `max_parallel` (varsayılan `16`) sınırına kadar aynı işten birden fazlasını eşzamanlı koşar. | Bağımsız periyodik iş parçaları paralel yürütülebiliyorsa. |
 
 [Yukarı dön](#konu-dizini)

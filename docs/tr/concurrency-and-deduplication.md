@@ -29,8 +29,8 @@ Bir hizmette `asyncio.Semaphore(10)` gibi **tek bir global limit** koyduğunda, 
 
 Her anahtar için eşzamanlı aktif işlem sayısını (`max_concurrency`) bağımsız sınırlar; bekleyenler her anahtar içinde **FIFO sırasıyla** uyanır ve işi biten boş anahtarlar güvenle temizlenir:
 
-- `with limiter.acquire(key, timeout=...)` / `async with limiter.acquire(key)` (asenkron sürümde dış `asyncio.wait_for(..., timeout)` ile kullanılabilir).
-- `acquire_nowait(key) -> bool`: Beklemeden izin almaya çalışır; almışsa mutlaka eşleşen `release(key)` çağrılmalıdır.
+- Thread tabanlı kodda `with limiter.acquire(key, timeout=...)`, asyncio kodunda `async with limiter.acquire(key)` kullan. Python 3.11 ve üstünde `asyncio.timeout(...)` ile korunan iş dahil tüm asenkron bloğa süre sınırı koyabilirsin.
+- `acquire_nowait(key)` iki sürümde de bir boolean döndürür. Başarılıysa `finally` bloğunda `release(key)` ya da `await release(key)` ile izni geri ver.
 - `stats()` ve `key_stats(key)` ile anlık aktif çalışan ve bekleyen sayılarını okuyabilirsin.
 - `close()` / `await aclose()` kapanış sonrasında bekleyen yeni talepleri kapatır.
 

@@ -11,7 +11,7 @@
 
 Eşzamanlı işleri, geçici hataları ve görevlerle kaynakların yaşam döngüsünü yönetmek için Python bileşenleri.
 
-> [Türkçe belgeler](docs/tr/README.md) mimari tercihleri, anahtar bazlı limitleri, dayanıklılık katmanlamasını, görev/kaynak scope'larını, `AsyncLoopPortal` köprüsünü, C çekirdeğini ve API başvurusunu kapsar. [English documentation](docs/en/README.md) bağlantısı da mevcuttur.
+> [Türkçe belgeler][docs-tr] mimari tercihleri, anahtar bazlı limitleri, dayanıklılık katmanlamasını, görev/kaynak scope'larını, `AsyncLoopPortal` köprüsünü, C çekirdeğini ve API başvurusunu kapsar. [English documentation][docs-en] bağlantısı da mevcuttur.
 
 ## İçindekiler
 
@@ -187,3 +187,5 @@ Proje [MIT Lisansı][license] ile yayımlanır.
 [license]: https://github.com/TahsinCr/python-flowcoord/blob/main/LICENSE
 [repo-flowevent]: https://github.com/TahsinCr/python-flowevent
 [repo-flowpipeline]: https://github.com/TahsinCr/python-flowpipeline
+[docs-en]: https://github.com/TahsinCr/python-flowcoord/blob/main/docs/en/README.md
+[docs-tr]: https://github.com/TahsinCr/python-flowcoord/blob/main/docs/tr/README.md

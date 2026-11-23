@@ -14,7 +14,7 @@ Bu rehber geçici ağ hatalarını toparlamak (`RetryPolicy`), çöken bağıml�
 - [`CircuitBreaker` ve `AsyncCircuitBreaker`](#circuitbreaker-ve-asynccircuitbreaker)
   - [Durum Makinesi (`closed` → `open` → `half_open`)](#durum-makinesi-closed--open--half_open)
 - [`CooldownRegistry` ve `AsyncCooldownRegistry`](#cooldownregistry-ve-asynccooldownregistry)
-- [Doğru Birleştirme Sırası: `RetryPolicy` Dışta mı İçte mi?](#doğru-birleştirme-sırası-retrypolicy-dışta-mı-içte-mi)
+- [Doğru Birleştirme Sırası: `RetryPolicy` Dışta mı İçte mi?](#doğru-birleştirme-sırası-retrypolicy-dışta-mı-i%CC%87çte-mi)
 
 ---
 
@@ -32,7 +32,7 @@ Her hata yeniden denenmez. Örneğin `ValueError` veya `400 Bad Request` hatası
 
 ### `Deadline` ile Toplam Süre Sınırlama
 
-`retry.run(op, deadline=budget)` verdiğinde, bir sonraki bekleme (`sleep`) süresi kalan `budget.remaining` değerini aşacaksa bekleme yapılmaz ve deneme döngüsü zaman bütçesine saygı göstererek son hatayı yükseltir.
+`deadline`, yeni denemenin ne zaman başlayabileceğini sınırlar ve beklemeyi kalan bütçeyle kısıtlar. Başlamış bir işlemi kesmez. Gerekirse işlemin kendi zaman aşımını ayrıca ayarla.
 
 [Yukarı dön](#konu-dizini)
 

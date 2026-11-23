@@ -6,6 +6,10 @@
 
 - Publish verified release distributions to PyPI with GitHub Actions Trusted Publishing.
 
+### Fixed
+
+- Correct the bilingual guides for async permits, retry deadlines, and periodic scheduling.
+
 ## [v1.0.0] - 2026-11-23
 
 After FlowEvent's [v1.4.2](https://github.com/TahsinCr/python-flowevent/releases/tag/v1.4.2) release, its concurrency, resilience, and task and resource management components became FlowCoord. The [source at v1.4.2](https://github.com/TahsinCr/python-flowevent/tree/v1.4.2) is in the `TahsinCr/python-flowevent` repository, where these APIs shipped under the `eventflow` import. `flowcoord` is developed and versioned independently.

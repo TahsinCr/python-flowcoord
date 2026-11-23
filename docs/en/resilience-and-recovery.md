@@ -32,7 +32,7 @@ Retrying non-transient errors (such as `400 Bad Request` or `ValueError`) wastes
 
 ### Bounding Total Time with `Deadline`
 
-Passing `deadline=budget` ensures the retry loop never sleeps past `budget.remaining`; if remaining budget is smaller than the scheduled backoff, retrying stops cleanly and re-raises the latest error.
+A `deadline` limits when a retry may start and caps the backoff to the remaining budget. It does not interrupt an operation that has already started. Give the operation its own timeout if it needs one.
 
 [Back to top](#table-of-contents)
 

@@ -21,7 +21,7 @@ This guide covers installing `flowcoord`, why its synchronous path avoids import
 
 ## Installation
 
-`flowcoord` requires **Python 3.10 or newer** with zero runtime dependencies. Prebuilt platform wheels include the optional compiled `flowcoord._core` extension; source installs without a C compiler fall back seamlessly to pure Python.
+`flowcoord` requires **Python 3.10 or newer**. Python 3.10 installs the `exceptiongroup` library. There are no runtime dependencies on Python 3.11 and later. The optional C extension comes with supported platform wheels. If there is no suitable wheel, installing from source can fall back to pure Python.
 
 ```bash
 # Install from PyPI

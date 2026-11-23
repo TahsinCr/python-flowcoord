@@ -11,7 +11,7 @@
 
 Execution primitives for Python applications that manage concurrent work, transient failures, and the lifetime of tasks and resources.
 
-> [English documentation](docs/en/README.md) covers architecture choices, keyed limiting, resilience layering, task/resource scopes, `AsyncLoopPortal`, the C core, and the API reference. Also available in [Türkçe](docs/tr/README.md).
+> [English documentation][docs-en] covers architecture choices, keyed limiting, resilience layering, task/resource scopes, `AsyncLoopPortal`, the C core, and the API reference. Also available in [Türkçe][docs-tr].
 
 ## Contents
 
@@ -187,3 +187,5 @@ This project is licensed under the [MIT License][license].
 [license]: https://github.com/TahsinCr/python-flowcoord/blob/main/LICENSE
 [repo-flowevent]: https://github.com/TahsinCr/python-flowevent
 [repo-flowpipeline]: https://github.com/TahsinCr/python-flowpipeline
+[docs-en]: https://github.com/TahsinCr/python-flowcoord/blob/main/docs/en/README.md
+[docs-tr]: https://github.com/TahsinCr/python-flowcoord/blob/main/docs/tr/README.md

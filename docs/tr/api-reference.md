@@ -4,15 +4,17 @@
 
 Bu sayfa `flowcoord` (`v1.0.0`) paketinden dışa aktarılan tüm public sınıfları, istatistik veri sınıflarını, metotları ve istisnaları özetler.
 
+Kurulu paketin sürümüne `flowcoord.__version__` ile erişebilirsin.
+
 ---
 
 ## Konu Dizini
 
 - [Eşzamanlılık Limitörleri ve SingleFlight](#eşzamanlılık-limitörleri-ve-singleflight)
 - [Dayanıklılık: Retry, Circuit Breaker, Cooldown ve Deadline](#dayanıklılık-retry-circuit-breaker-cooldown-ve-deadline)
-- [Görev, Scope, Portal ve İş Havuzu](#görev-scope-portal-ve-iş-havuzu)
+- [Görev, Scope, Portal ve İş Havuzu](#görev-scope-portal-ve-i%CC%87ş-havuzu)
 - [Zamanlama, Coalescing ve Gözlemlenebilirlik](#zamanlama-coalescing-ve-gözlemlenebilirlik)
-- [Veri Sınıfları ve İstisnalar](#veri-sınıfları-ve-istisnalar)
+- [Veri Sınıfları ve İstisnalar](#veri-sınıfları-ve-i%CC%87stisnalar)
 
 ---
 
@@ -68,7 +70,7 @@ Bu sayfa `flowcoord` (`v1.0.0`) paketinden dışa aktarılan tüm public sınıf
 | --- | --- | --- |
 | `Scheduler` | `(*, max_workers=4, max_jobs=4096, on_error=None, observer=None)` | `schedule_once(cb, *args, delay=0.0, name=None, **kwargs)`, `periodic(cb, *args, interval, overlap='skip', initial_delay=None, max_parallel=16, name=None, **kwargs)`, `cancel(handle)`, `close(timeout=None)`, `snapshot()` |
 | `AsyncScheduler` | `(*, max_jobs=4096, on_error=None, observer=None)` | `schedule_once(...)`, `periodic(...)`, `cancel(handle)`, `async aclose(timeout=None)`, `snapshot()` |
-| `ScheduledHandle` / `AsyncScheduledHandle` | Scheduler tarafından döndürülür | `done`, `cancel()`, `join(timeout=None)` (`Async*` sürümünde `.name` + `async join`) |
+| `ScheduledHandle` / `AsyncScheduledHandle` | Scheduler tarafından döndürülür | `name`, `done`, `cancel()`, `join(timeout=None)` (`Async*` sürümünde `async join`) |
 | `KeyedCoalescer[T, K]` | `(*, interval, key, merge, callback, max_pending_keys=128, on_error=None, observer=None)` | `push(value)`, `pending_count`, `stats()`, `flush(timeout=None)`, `close(*, flush=True, timeout=None)` |
 | `OperationStats` | `(*, max_operations=128)` | `record(name, *, status='success', elapsed=0.0, queue_depth=None, dropped=0, retries=0, rejected=0, timeouts=0, shutdown_seconds=0.0)`, `snapshot()`, `reset()` |
 

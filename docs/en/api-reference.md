@@ -2,7 +2,9 @@
 
 # 06 · FlowCoord API Reference
 
-Complete reference for all 46 public exports in `flowcoord` (`v1.0.0`).
+Complete reference for the public API in `flowcoord` (`v1.0.0`).
+
+The installed package exposes its version as `flowcoord.__version__`.
 
 ---
 
@@ -68,7 +70,7 @@ Complete reference for all 46 public exports in `flowcoord` (`v1.0.0`).
 | --- | --- | --- |
 | `Scheduler` | `(*, max_workers=4, max_jobs=4096, on_error=None, observer=None)` | `schedule_once(cb, *args, delay=0.0, name=None, **kwargs)`, `periodic(cb, *args, interval, overlap='skip', initial_delay=None, max_parallel=16, name=None, **kwargs)`, `cancel(handle)`, `close(timeout=None)`, `snapshot()` |
 | `AsyncScheduler` | `(*, max_jobs=4096, on_error=None, observer=None)` | `schedule_once(...)`, `periodic(...)`, `cancel(handle)`, `async aclose(timeout=None)`, `snapshot()` |
-| `ScheduledHandle` / `AsyncScheduledHandle` | Returned by scheduler | `done`, `cancel()`, `join(timeout=None)` (`.name` + `async join` on async) |
+| `ScheduledHandle` / `AsyncScheduledHandle` | Returned by scheduler | `name`, `done`, `cancel()`, `join(timeout=None)` (`async join` on async) |
 | `KeyedCoalescer[T, K]` | `(*, interval, key, merge, callback, max_pending_keys=128, on_error=None, observer=None)` | `push(value)`, `pending_count`, `stats()`, `flush(timeout=None)`, `close(*, flush=True, timeout=None)` |
 | `OperationStats` | `(*, max_operations=128)` | `record(name, *, status='success', elapsed=0.0, queue_depth=None, dropped=0, retries=0, rejected=0, timeouts=0, shutdown_seconds=0.0)`, `snapshot()`, `reset()` |
 

@@ -29,8 +29,8 @@ Protecting a multi-tenant service with a single global `asyncio.Semaphore(10)` l
 
 Enforces an independent concurrent permit cap (`max_concurrency`) per hashable key with **FIFO wakeup ordering** and automatic cleanup of idle keys:
 
-- `with limiter.acquire(key, timeout=...)` / `async with limiter.acquire(key)` (wrap async acquire with `asyncio.wait_for` for timeouts).
-- `acquire_nowait(key) -> bool`: Non-blocking permit grab (always pair a `True` return with `release(key)`).
+- Use `with limiter.acquire(key, timeout=...)` in threaded code or `async with limiter.acquire(key)` in asyncio. In Python 3.11+, wrap the async context in `asyncio.timeout(...)` to bound the whole block, including the protected work.
+- `acquire_nowait(key)` returns a boolean in both variants. If it succeeds, pair it with `release(key)` or `await release(key)` in a `finally` block.
 - Inspect live counts via `stats()` and `key_stats(key)`.
 - `close()` / `await aclose()` rejects further waiting cleanly.
 
@@ -80,7 +80,7 @@ flowchart LR
     SF -->|"share outcome or error"| C1 & C2 & C3
 ```
 
-- If the leader raises an `Exception`, all joined callers receive it and the key is cleared immediately so subsequent callers can retry fresh.
+- Joined callers share the result or failure. After the shared call finishes and its entry is removed, a later caller can start a fresh call.
 - **`AsyncSingleFlight` cancellation safety:** Cancelling one waiter's `await sf.run(...)` does not break other joined waiters; supports `async aclose()`.
 
 ```python

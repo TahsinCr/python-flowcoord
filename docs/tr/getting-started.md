@@ -12,16 +12,16 @@ Bu rehber `flowcoord` kurulumunu, kütüphanenin senkron/asenkron tasarım felse
 - [Mimari Tercihler ("Neden Böyle Tasarlandı?")](#mimari-tercihler-neden-böyle-tasarlandı)
   - [Bağımsız Senkron Import Yolu (`asyncio` Yüklemeden)](#bağımsız-senkron-import-yolu-asyncio-yüklemeden)
   - [CPython GIL Gerçeği: Thread Havuzları Ne Zaman Kullanılmalı?](#cpython-gil-gerçeği-thread-havuzları-ne-zaman-kullanılmalı)
-  - [Kooperatif İptal (Neden Zorla Thread/Task Öldürülmez?)](#kooperatif-iptal-neden-zorla-threadtask-öldürülmez)
+  - [Kooperatif İptal (Neden Zorla Thread/Task Öldürülmez?)](#kooperatif-i%CC%87ptal-neden-zorla-threadtask-öldürülmez)
   - [Kapasite Sınırları ve Hızlı Reddetme (Fail-Fast)](#kapasite-sınırları-ve-hızlı-reddetme-fail-fast)
 - [Paylaşılan Zaman Bütçesi: `Deadline`](#paylaşılan-zaman-bütçesi-deadline)
-- [İlk Çalışan Örnek](#ilk-çalışan-örnek)
+- [İlk Çalışan Örnek](#i%CC%87lk-çalışan-örnek)
 
 ---
 
 ## Kurulum
 
-`flowcoord` **Python 3.10 veya üzeri** gerektirir ve harici runtime bağımlılığı yoktur. Desteklenen sistemlerde isteğe bağlı `flowcoord._core` C uzantısı önceden derlenmiş olarak gelir; yoksa saf Python uygulaması devreye girer.
+`flowcoord` **Python 3.10 veya üzeri** gerektirir. Python 3.10’da `exceptiongroup` kurulur. Python 3.11 ve üstünde çalışma zamanı bağımlılığı yoktur. Desteklenen platformların wheel paketleri isteğe bağlı C uzantısını içerir. Uygun wheel yoksa kaynak koddan kurulum saf Python uygulamasına dönebilir.
 
 ```bash
 # PyPI üzerinden kurulum

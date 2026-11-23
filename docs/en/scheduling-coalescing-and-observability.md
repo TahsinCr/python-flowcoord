@@ -30,7 +30,7 @@ When a job scheduled every `1.0` s runs for `1.5` s, `overlap` dictates behavior
 | Policy | Behavior | When to Use |
 | --- | --- | --- |
 | `"skip"` *(default)* | Skips firing again while a previous run is active. | Health checks, periodic syncs where backlog hurts. |
-| `"queue"` | Queues the next run sequentially once the current finishes. | Periodic ticks that must not be skipped. |
+| `"queue"` | Schedules the next run after the current run finishes, without accumulating a backlog. | Work that must run serially without overlap. |
 | `"parallel"` | Runs overlapping triggers concurrently up to `max_parallel` (default `16`). | Independent periodic batches. |
 
 [Back to top](#table-of-contents)
