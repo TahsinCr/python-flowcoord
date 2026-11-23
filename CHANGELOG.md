@@ -2,10 +2,13 @@
 
 ## [Unreleased]
 
+## [v1.0.0] - 2026-11-23
+
 After FlowEvent's [v1.4.2](https://github.com/TahsinCr/python-flowevent/releases/tag/v1.4.2) release, its concurrency, resilience, and task and resource management components became FlowCoord. The [source at v1.4.2](https://github.com/TahsinCr/python-flowevent/tree/v1.4.2) is in the `TahsinCr/python-flowevent` repository, where these APIs shipped under the `eventflow` import. `flowcoord` is developed and versioned independently.
 
 ### Added
 
+- Expose the package version as `flowcoord.__version__`.
 - Add keyed limiters, single-flight execution, retry policies, circuit breakers, and cooldown tracking.
 - Provide task and resource scopes for explicit cleanup ownership.
 - Keep work scheduling and coalescing, bounded worker pools, and event-loop portals together in `flowcoord`.
