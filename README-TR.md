@@ -11,6 +11,8 @@
 
 Eşzamanlı işleri, geçici hataları ve görevlerle kaynakların yaşam döngüsünü yönetmek için Python bileşenleri.
 
+> [Türkçe belgeler](docs/tr/README.md) mimari tercihleri, anahtar bazlı limitleri, dayanıklılık katmanlamasını, görev/kaynak scope'larını, `AsyncLoopPortal` köprüsünü, C çekirdeğini ve API başvurusunu kapsar. [English documentation](docs/en/README.md) bağlantısı da mevcuttur.
+
 ## İçindekiler
 
 - [Başlangıç](#getting-started)

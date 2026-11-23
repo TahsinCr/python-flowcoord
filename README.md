@@ -11,6 +11,8 @@
 
 Execution primitives for Python applications that manage concurrent work, transient failures, and the lifetime of tasks and resources.
 
+> [English documentation](docs/en/README.md) covers architecture choices, keyed limiting, resilience layering, task/resource scopes, `AsyncLoopPortal`, the C core, and the API reference. Also available in [Türkçe](docs/tr/README.md).
+
 ## Contents
 
 - [Getting started](#getting-started)
