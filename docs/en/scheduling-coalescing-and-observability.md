@@ -23,6 +23,8 @@ This guide covers `Scheduler` / `AsyncScheduler` overlap policies, deduplicating
 - `schedule_once(cb, *args, delay=0.0, name=None, **kwargs)` → `ScheduledHandle` / `AsyncScheduledHandle`
 - `periodic(cb, *args, interval=..., overlap="skip", initial_delay=None, max_parallel=16, name=None, **kwargs)`
 
+`AsyncScheduler.max_jobs` counts registered jobs. Each parallel periodic job can additionally run up to its own `max_parallel` concurrent ticks.
+
 ### Overlap Policies (`overlap`: `skip`, `queue`, `parallel`)
 
 When a job scheduled every `1.0` s runs for `1.5` s, `overlap` dictates behavior:

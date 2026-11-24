@@ -6,6 +6,10 @@
 
 - Publish verified release distributions to PyPI with GitHub Actions Trusted Publishing.
 
+### Changed
+
+- Document task scope join semantics and scheduler capacity.
+
 ### Fixed
 
 - Measure cooldown expiry and entry capacity when a block acquires the registry lock.

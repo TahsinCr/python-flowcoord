@@ -23,6 +23,8 @@ Bu rehber `Scheduler` / `AsyncScheduler` örtüşme politikalarını, yüksek fr
 - `schedule_once(cb, *args, delay=0.0, name=None, **kwargs)` → `ScheduledHandle` / `AsyncScheduledHandle`
 - `periodic(cb, *args, interval=..., overlap="skip", initial_delay=None, max_parallel=16, name=None, **kwargs)`
 
+`AsyncScheduler.max_jobs` kayıtlı işleri sayar. Paralel çalışan her periyodik iş ayrıca kendi `max_parallel` sınırına kadar eşzamanlı tetikleme çalıştırabilir.
+
 ### Örtüşme Politikaları (`overlap`: `skip`, `queue`, `parallel`)
 
 Periyodik bir iş her `1.0` saniyede çalışmak üzere kurulmuşken bir çalıştırma `1.5` saniye sürerse ne olmalı? `overlap` bunu belirler:

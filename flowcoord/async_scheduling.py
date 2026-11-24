@@ -51,7 +51,11 @@ class AsyncScheduledHandle:
 
 
 class AsyncScheduler:
-    """Schedule one-shot and periodic async or synchronous callables on one loop."""
+    """Schedule one-shot and periodic async or synchronous callables on one loop.
+
+    max_jobs limits registered jobs. Parallel ticks are limited per periodic
+    job by max_parallel and do not consume registration slots.
+    """
 
     def __init__(
         self,

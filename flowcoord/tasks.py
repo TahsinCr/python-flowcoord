@@ -168,6 +168,7 @@ class TaskScope:
             raise RuntimeError("A scope worker cannot wait for its own task scope")
 
     def join(self, timeout: float | None = None) -> None:
+        """Wait until the scope is idle, including tasks added while waiting."""
         self._require_non_worker()
         budget = validate_nonnegative_timeout(timeout, name="task scope timeout")
         deadline = None if budget is None else time.monotonic() + budget

@@ -37,7 +37,7 @@ class AsyncCoordinationEdgeTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_periodic_scheduler_caps_parallel_callbacks(self):
         observer = OperationStats()
-        scheduler = AsyncScheduler(observer=observer)
+        scheduler = AsyncScheduler(max_jobs=1, observer=observer)
         entered = asyncio.Event()
         dropped = asyncio.Event()
         calls = 0
@@ -54,7 +54,8 @@ class AsyncCoordinationEdgeTests(unittest.IsolatedAsyncioTestCase):
         async def blocked_tick():
             nonlocal calls
             calls += 1
-            entered.set()
+            if calls == 2:
+                entered.set()
             await asyncio.Event().wait()
 
         handle = scheduler.periodic(
@@ -62,11 +63,13 @@ class AsyncCoordinationEdgeTests(unittest.IsolatedAsyncioTestCase):
             interval=0.002,
             initial_delay=0,
             overlap="parallel",
-            max_parallel=1,
+            max_parallel=2,
         )
-        await entered.wait()
+        await asyncio.wait_for(entered.wait(), timeout=5)
         await asyncio.wait_for(dropped.wait(), timeout=5)
-        self.assertEqual(calls, 1)
+        self.assertEqual(calls, 2)
+        with self.assertRaisesRegex(RuntimeError, "capacity is full"):
+            scheduler.schedule_once(lambda: None)
         self.assertTrue(scheduler.cancel(handle))
         with self.assertRaises(asyncio.CancelledError):
             await handle.join(1)

@@ -26,6 +26,29 @@ class AsyncPrimitiveTests(unittest.IsolatedAsyncioTestCase):
     async def _fail_operation(message):
         raise OSError(message)
 
+    async def test_join_waits_only_for_tasks_owned_at_entry(self):
+        first_done = asyncio.Event()
+        later_done = asyncio.Event()
+        joining = asyncio.Event()
+        async with AsyncTaskScope() as scope:
+            scope.start(first_done.wait)
+
+            async def join():
+                joining.set()
+                await scope.join()
+
+            waiter = asyncio.create_task(join())
+            try:
+                await joining.wait()
+                later = scope.start(later_done.wait)
+                first_done.set()
+                await asyncio.wait_for(waiter, 2)
+                self.assertFalse(later.done)
+            finally:
+                first_done.set()
+                later_done.set()
+                await waiter
+
     async def test_task_scope_limiter_and_metrics_compose(self):
         observer = OperationStats()
         limiter = AsyncKeyedConcurrencyLimiter[int](1, observer=observer)

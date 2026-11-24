@@ -204,7 +204,7 @@ class AsyncTaskScope:
         return sum(int(task.cancel()) for task in tuple(self._tasks))
 
     async def join(self, timeout: float | None = None) -> None:
-        """Wait for all tasks without changing their cancellation policy."""
+        """Wait for tasks owned when the call starts, without cancelling them."""
         self._bind_loop()
         if asyncio.current_task() in self._tasks:
             raise RuntimeError("An owned task cannot join its own scope")

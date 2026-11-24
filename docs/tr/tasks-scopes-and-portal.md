@@ -38,6 +38,8 @@ Başlatılan tüm arka plan işlerini tek bir sahip altında toplar:
 - **İptal slot koruması (`AsyncTaskScope`):** İptal edilen bir `asyncio` görevi, içindeki `finally:` temizliği bitene kadar `max_pending` slotunu tutar; böylece yavaş temizliklerin birikip kapasiteyi sessizce aşması önlenir.
 - `TaskHandle` / `AsyncTaskHandle` üzerinden `.join(timeout=...)`, `.cancel()`, `.done` kullanılabilir; başarısız işler için scope kurucusuna `on_error(handle, exc)` verilebilir.
 
+Senkron `join()`, beklerken eklenen görevler de dahil olmak üzere kapsamın boşalmasını bekler. Asenkron `join()` yalnızca çağrı başında kapsamın sahip olduğu görevleri bekler. Yeni görev kabulünü durdurup kapanış politikalarını uygulamak için `close()` veya `aclose()` kullan.
+
 [Yukarı dön](#konu-dizini)
 
 ---

@@ -38,6 +38,8 @@ Own all background work under a single bounded scope:
 - **Cancellation slot accounting (`AsyncTaskScope`):** Cancelled tasks continue occupying their `max_pending` slot until `finally` cleanup completes, preventing hidden capacity leaks.
 - Returns `TaskHandle` / `AsyncTaskHandle` with `.join(timeout=...)`, `.cancel()`, `.done`, plus optional scope-level `on_error(handle, exc)`.
 
+Synchronous `join()` waits until the scope is empty, including tasks admitted while it waits. Asynchronous `join()` waits for the tasks owned at entry. Use `close()` or `aclose()` to stop new admissions and apply shutdown policies.
+
 [Back to top](#table-of-contents)
 
 ---
