@@ -9,6 +9,7 @@
 
 ### Changed
 
+- Lead with the PyPI installation command.
 - Document task scope join semantics and scheduler capacity.
 
 ### Fixed

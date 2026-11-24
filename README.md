@@ -28,10 +28,10 @@ Execution primitives for Python applications that manage concurrent work, transi
 
 ### Install
 
-Install from the project root with Python 3.10 or later.
+Install from PyPI with Python 3.10 or later.
 
 ~~~sh
-python -m pip install .
+pip install flowcoord
 ~~~
 
 ### Retry a transient failure

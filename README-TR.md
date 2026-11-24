@@ -28,10 +28,10 @@ Eşzamanlı işleri, geçici hataları ve görevlerle kaynakların yaşam döng�
 
 ### Kurulum
 
-Proje kökünde Python 3.10 veya üzeriyle kurun.
+PyPI üzerinden Python 3.10 veya üzeriyle kurun.
 
 ~~~sh
-python -m pip install .
+pip install flowcoord
 ~~~
 
 ### Geçici bir hatadan sonra yeniden deneyin
