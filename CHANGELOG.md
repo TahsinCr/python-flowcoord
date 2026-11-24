@@ -4,6 +4,7 @@
 
 ### Added
 
+- Run C coverage, GCC static analysis, and AddressSanitizer/UBSan checks in CI.
 - Publish verified release distributions to PyPI with GitHub Actions Trusted Publishing.
 
 ### Changed

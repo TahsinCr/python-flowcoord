@@ -70,3 +70,70 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - run: python run_tests.py --native
       - run: python -c "import sys; from flowcoord._native import CORE; assert CORE is not None and not sys._is_gil_enabled()"
+
+  native-coverage:
+    name: Native C line, branch, and function coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: "3.14"
+
+      - name: Install isolated coverage tools
+        run: python -m pip install "setuptools>=77" "gcovr==8.8" "pyperf==2.11.0"
+
+      - name: Build, test, and measure the native C extension
+        run: python tools/native_coverage.py --output-dir build/native-c-coverage
+
+      - name: Upload native C coverage reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-c-coverage
+          path: build/native-c-coverage/
+          if-no-files-found: warn
+          retention-days: 14
+
+  native-safety:
+    name: Native C sanitizers and static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: "3.14"
+
+      - name: Install package and development tools
+        run: python -m pip install -e ".[dev]" "setuptools>=77"
+
+      - name: Analyze native C source with GCC
+        run: >-
+          gcc -fanalyzer -fsyntax-only -Wall -Wextra -Werror
+          -I"$(python -c 'import sysconfig; print(sysconfig.get_path("include"))')"
+          flowcoord/_core.c
+
+      - name: Build the extension with AddressSanitizer and UBSan
+        env:
+          CFLAGS: -fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=all
+          LDFLAGS: -fsanitize=address,undefined
+          FLOWCOORD_REQUIRE_NATIVE: "1"
+        run: python setup.py build_ext --inplace --force
+
+      - name: Exercise the instrumented extension
+        env:
+          ASAN_OPTIONS: detect_leaks=0:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+          PYTHONPATH: tests
+        run: |
+          export LD_PRELOAD="$(gcc -print-file-name=libasan.so)"
+          python -c "from flowcoord._native import CORE; assert CORE is not None"
+          python -m unittest test_native_core
