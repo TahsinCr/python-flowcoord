@@ -385,12 +385,16 @@ class _BaseCooldownRegistry(ABC, Generic[K]):
         return len(expired)
 
     def block(self, key: K, duration: float, *, extend: bool = True) -> float:
-        """Block a key; by default, a new block only extends the current deadline."""
+        """Block a key from the time the update acquires the registry lock.
+
+        The clock runs under that lock and must be fast and free of side effects.
+        By default, a new block only extends the existing deadline.
+        """
         seconds = validate_finite_duration(duration, name="duration", allow_zero=True)
         if not isinstance(extend, bool):
             raise TypeError("extend must be a bool")
-        now = self._clock()
         with self._lock:
+            now = self._clock()
             current = self._deadlines.get(key)
             if current is not None and current <= now:
                 self._deadlines.pop(key)

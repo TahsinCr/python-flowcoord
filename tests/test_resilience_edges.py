@@ -18,6 +18,32 @@ from flowcoord.timing import Deadline
 
 
 class CooldownThreadTests(unittest.TestCase):
+    def test_block_uses_commit_time_under_lock_contention(self):
+        for registry_type in (CooldownRegistry, AsyncCooldownRegistry):
+            with self.subTest(registry=registry_type):
+                clock = ManualClock()
+                registry = registry_type(max_entries=1, clock=clock)
+                registry.block("expired", 0.5)
+                original_lock = registry._lock
+                attempted = threading.Event()
+
+                class ObservedLock:
+                    def __enter__(self):
+                        attempted.set()
+                        original_lock.acquire()
+
+                    def __exit__(self, *args):
+                        original_lock.release()
+
+                with ThreadPoolExecutor(1) as pool:
+                    with original_lock, patch.object(registry, "_lock", ObservedLock()):
+                        pending = pool.submit(registry.block, "new", 1.0)
+                        self.assertTrue(attempted.wait(2))
+                        clock.advance(0.8)
+                    self.assertEqual(pending.result(2), 1.0)
+                self.assertFalse(registry.is_blocked("expired"))
+                self.assertAlmostEqual(registry.remaining("new"), 1.0)
+
     @staticmethod
     def track_waiters(registry, registered, expected):
         class TrackedCondition(threading.Condition):

@@ -8,6 +8,7 @@
 
 ### Fixed
 
+- Measure cooldown expiry and entry capacity when a block acquires the registry lock.
 - Correct the bilingual guides for async permits, retry deadlines, and periodic scheduling.
 
 ## [v1.0.0] - 2026-11-23
